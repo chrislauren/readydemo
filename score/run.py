@@ -39,6 +39,8 @@ aks_target.wait_for_completion(True)
 # Create a container image
 from azureml.core.image import ContainerImage
 
+model = Model.list(ws, name='frozen_inference_graph.pb')[0]
+
 image_config = ContainerImage.image_configuration(execution_script='score.py',
                                                   runtime='python',
                                                   conda_file='score.yml',
@@ -72,7 +74,7 @@ aks_service.wait_for_deployment(show_output=True)
 import requests
 from azureml.core.webservice import Webservice, AksWebservice
 
-image = open('./samples/image2.jpg', 'rb')
+image = open('./samples/Before.jpg', 'rb')
 input_data = image.read()
 image.close()
 
@@ -96,7 +98,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image
 
-image = Image.open('./samples/image2.jpg')
+image = Image.open('./samples/Before.jpg')
 image_np = utils.load_image_into_numpy_array(image)
 category_index = utils.create_category_index_from_labelmap('./samples/label_map.pbtxt', use_display_name=True)
 
@@ -110,7 +112,7 @@ utils.visualize_boxes_and_labels_on_image_array(
     use_normalized_coordinates=True,
     line_thickness=8)
 
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(24, 16))
 plt.imshow(image_np)
 
 #%%

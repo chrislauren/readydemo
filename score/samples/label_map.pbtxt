@@ -1,7 +1,7 @@
 item {
   name: "/m/01g317"
   id: 1
-  display_name: "person"
+  display_name: "hard hat"
 }
 item {
   name: "/m/0199g"
@@ -71,7 +71,7 @@ item {
 item {
   name: "/m/015p6"
   id: 16
-  display_name: "bird"
+  display_name: "no hard hat"
 }
 item {
   name: "/m/01yrx"
