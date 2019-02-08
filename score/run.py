@@ -49,6 +49,9 @@ image = ContainerImage.create(name='contosoimage',
                               image_config=image_config,
                               workspace=ws)
 
+image
+
+#%%
 image.wait_for_creation(show_output = True)
 
 #%%
@@ -67,11 +70,13 @@ aks_service.wait_for_deployment(show_output=True)
 #%%
 # Test the service
 import requests
+from azureml.core.webservice import Webservice, AksWebservice
 
 image = open('./samples/image2.jpg', 'rb')
 input_data = image.read()
 image.close()
 
+aks_service_name = 'contosoman'
 aks_service = AksWebservice(workspace=ws, name=aks_service_name)
 
 auth = 'Bearer ' + aks_service.get_keys()[0]

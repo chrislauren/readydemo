@@ -31,7 +31,9 @@ image = Image.create(name = 'contosoimage-edge',
                      models = [model],
                      image_config = image_config, 
                      workspace = ws)
+image
 
+#%%
 image.wait_for_creation(show_output = True)
 
 #%%

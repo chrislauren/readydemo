@@ -31,7 +31,7 @@ gpu_cluster.wait_for_completion(show_output=True)
 #%%
 # Prepare data
 ds = ws.get_default_datastore()
-ds.upload('./data')
+ds.upload('../data')
 
 #%%
 # Configure experiment
