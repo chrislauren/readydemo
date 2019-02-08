@@ -67,6 +67,9 @@ aks_service = Webservice.deploy_from_image(workspace=ws,
                                            image=image,
                                            deployment_config=aks_config,
                                            deployment_target=aks_target)
+aks_service
+
+#%%
 aks_service.wait_for_deployment(show_output=True)
 
 #%%
@@ -78,7 +81,7 @@ image = open('./samples/Before.jpg', 'rb')
 input_data = image.read()
 image.close()
 
-aks_service_name = 'contosoman'
+aks_service_name = 'contosoman2'
 aks_service = AksWebservice(workspace=ws, name=aks_service_name)
 
 auth = 'Bearer ' + aks_service.get_keys()[0]
