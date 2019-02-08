@@ -37,6 +37,7 @@ aks_target.wait_for_completion(True)
 
 #%%
 # Create a container image
+from azureml.core.model import Model
 from azureml.core.image import ContainerImage
 
 model = Model.list(ws, name='frozen_inference_graph.pb')[0]
@@ -59,6 +60,8 @@ image.wait_for_creation(show_output = True)
 #%%
 # Deploy the model as a service
 from azureml.core.webservice import Webservice, AksWebservice
+
+image = next((x for x in ContainerImage.list(ws, image_name='contosoimage') if x.creation_state == 'Succeeded'), None)
 
 aks_service_name = 'contosoman'
 aks_config = AksWebservice.deploy_configuration(collect_model_data=True, enable_app_insights=True)
