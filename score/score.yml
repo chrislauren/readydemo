@@ -5,7 +5,8 @@ dependencies:
 - python=3.6.2
 
 - pip:
-  - azureml-sdk[notebooks,automl]==1.0.8
+  - azureml-sdk[notebooks,automl]==1.0.10
+  - azureml-monitoring==0.1.0a14
   - azureml-contrib-services==1.0.10
   - pillow==5.4.1
   - tensorflow==1.10.0

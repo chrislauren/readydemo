@@ -1,9 +1,11 @@
+import base64
 import json
 import numpy as np
 import os
 import tensorflow as tf
 
 from azureml.core.model import Model
+from azureml.monitoring import ModelDataCollector
 from azureml.contrib.services.aml_request import AMLRequest, rawhttp
 from io import BytesIO
 from PIL import Image
@@ -101,6 +103,11 @@ def init():
       od_graph_def.ParseFromString(serialized_graph)
       tf.import_graph_def(od_graph_def, name='')
 
+  # Setup data collectors
+  global inputs_dc, prediction_dc
+  inputs_dc = ModelDataCollector('best_model', identifier='inputs', feature_names=['image'])
+  prediction_dc = ModelDataCollector('best_model', identifier='predictions', feature_names=['num_detections', 'detection_classes', 'detection_boxes', 'detection_scores'])
+
 # Passes data to the model and returns the prediction
 @rawhttp
 def run(request):
@@ -109,13 +116,20 @@ def run(request):
   image_np = load_image_into_numpy_array(image)
 
   output_dict = run_inference_for_single_image(image_np, detection_graph)
+  num_detections = output_dict['num_detections']
+  detection_classes = output_dict['detection_classes'].tolist()
+  detection_boxes = output_dict['detection_boxes'].tolist()
+  detection_scores = output_dict['detection_scores'].tolist()
 
   output = {}
-  output['num_detections'] = output_dict['num_detections']
-  output['detection_classes'] = output_dict['detection_classes'].tolist()
-  output['detection_boxes'] = output_dict['detection_boxes'].tolist()
-  output['detection_scores'] = output_dict['detection_scores'].tolist()
+  output['num_detections'] = num_detections
+  output['detection_classes'] = detection_classes
+  output['detection_boxes'] = detection_boxes
+  output['detection_scores'] = detection_scores
   if 'detection_masks' in output_dict:
     output['detection_masks'] = output_dict['detection_masks'].tolist()
+
+  inputs_dc.collect([base64.b64encode(body)])
+  prediction_dc.collect([num_detections, json.dumps(detection_classes), json.dumps(detection_boxes), json.dumps(detection_scores)])
   
   return output
